@@ -7,11 +7,23 @@ const userRouter = require('./routes/userRoutes')
 
 const app = express()
 
+
+console.log(process.env.NODE_ENV)
 // 1) MIDDELWARE
 // middelware - mes req, res
 app.use(express.json())
 
+if (process.env.NODE_ENV === "development") {
+
+
+    app.use(morgan('dev'))
+}
+
 app.use(morgan('dev'))
+
+app.use(express.json())
+app.use(express.static(`${__dirname}/public`))
+
 
 app.use((req, res, next) => {
     console.log("Hello from the middelware")
