@@ -1,83 +1,72 @@
-const fs = require('fs')
+const Tour = require('./../models/tourModel')
 
+// const fs = require('fs')
 // e kem lexu filen i cili i permban te gjitha tours
-const tours = JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`))
-
-
-exports.checkId = (req, res, next, val) => {
-    console.log(`Tour id: ${val}`)
-
-    // 15 > 12
-    if (req.params.id * 1 > tours.length) {
-        return res.json({
-            status: "fail",
-            message: "Invalid ID"
-        })
-    }
-    next()
-}
+// const tours = JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`))
 
 
 
-exports.checkBody = (req,res,next) => {
-
-    if(!req.body.name ||    !req.body.price) {
-
-
-        return res.json({
-
-            status: "fail",
-            message: "missing name"
-        })
-
-    }
-
-
-    next()
-}
 
 exports.getAllTours = (req, res) => {
     console.log(req.requestTime)
 
     res.json({
         status: "success",
-        requested: req.requestTime,
-        data: { tours }
+        // requested: req.requestTime,
+        // data: { tours }
     })
 }
 
-exports.createTour = (req, res) => {
-    // console.log(req.body)
+exports.createTour = async (req, res) => {
 
-    // ka me u shtu nje dokument i ri
-    const newId = tours[tours.length - 1].id + 1
-    const newTour = Object.assign({ id: newId }, req.body)
+        // o1
+    const newTour = new Tour ({})
+    newTour.save()
 
-    tours.push(newTour)
-    fs.writeFile(`${__dirname}/dev-data/data/tours-simple.json`, JSON.stringify(tours), err => {
+
+    try{
+
+        const newTour = await Tour.create(req.body)
+
         res.json({
-            status: "success",
+
+            status: "succes",
             data: {
                 tour: newTour
             }
+
         })
 
-    })
+    }
+
+
+    catch (err) {
+
+        res.json({
+
+            status: "fail",
+            message: err
+
+        })
+
+
+    }
+
 }
 
 exports.getTour = (req, res) => {
     console.log(req.params)
 
     // po e marrim id-n dhe po e konvertojm ne string
-    const id = req.params.id * 1
-    const tour = tours.find(el => el.id === id)
+    // const id = req.params.id * 1
+    // const tour = tours.find(el => el.id === id)
 
-    res.json({
-        status: "success",
-        data: {
-            tour
-        }
-    })
+    // res.json({
+    //     status: "success",
+    //     data: {
+    //         tour
+    //     }
+    // })
 
 }
 
@@ -99,4 +88,3 @@ exports.deleteTour = (req, res) => {
         data: null
     })
 }
-
