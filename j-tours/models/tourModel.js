@@ -65,9 +65,38 @@ const tourSchema = new mongoose.Schema({
     },
 
     startDates: [Date]
+
+
+
+
+
+
+
+
+
+    
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // tabela
 const Tour = mongoose.model("Tour", tourSchema)
 
 module.exports = Tour
+
+
+
